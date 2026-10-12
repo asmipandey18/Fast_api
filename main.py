@@ -60,11 +60,32 @@ def greet_user(name:str):
 # }
 
 # s1 = Student(**data)
-
 # print(s1)
-
 # print(s1.model_dump())
 
+## Exception handling / error handling
+
+from pydantic import BaseModel, ValidationError
+from typing import List
+
+class Student(BaseModel):
+    id: int
+    name: str
+    subjects: List[str] = []
+
+data = {
+    'id': 1,
+    'name': "Asmi pandey",
+    'subjects': ['ML', 'Full Stack']
+}
+
+try:
+    s1 = Student(**data)
+    print(s1)
+
+except ValidationError as e:
+    print("Invalid student data!")
+    print(e)
 
 
 ## Basic Data validation
@@ -139,7 +160,8 @@ async def student_profile(s1: Student):
 #     return student
 
 
-# ## Task
+
+### Task
 # students = []
 
 # # POST API: Add student details
