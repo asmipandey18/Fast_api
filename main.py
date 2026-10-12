@@ -108,10 +108,35 @@ def greet_user(name:str):
 #invalid_user_data = User(username="jim_doe", email=123)
 # This will raise a ValidationError for 'email' since it should be a string.
 
+
+
 ## pydantic model as request body
 class Student(BaseModel):
     id: int
-    name: str = Field(None, title="")
+    name: str = Field(None, title="Nmae of the student", max_length=10)
+    subjects: List[str] = []
+
+@app.post("/student")
+async def student_profile(s1: Student):
+    return s1
+
+
+
+
+# ## Example of FastAPI endpoint /student_profile that accepts student information as a payload.
+# class StudentProfile(BaseModel):
+#     name: str
+#     phone: str
+#     address: str
+#     college_name: str
+#     email: str
+#     faculty: str
+#     subjects: list[str]
+#     marks: list[float]
+
+# @app.post("/student_profile")
+# async def student_profile(student: StudentProfile):
+#     return student
 
 
 # ## Task
