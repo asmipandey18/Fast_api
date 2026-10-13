@@ -205,7 +205,7 @@ async def create_todo(todo: Todo):
     todos_list.append(todo.model_dump())
     return todo
 
-@app.get("/todos")
+@app.get("/todos", response_model=list[Todo])
 async def get_todos():
     return todos_list
 
