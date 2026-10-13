@@ -186,6 +186,7 @@ async def home():
     return {"message": "Welcome to the TODO App"}
 
 class Todo(BaseModel):
+    id: int
     title: str = Field(min_length=3, max_length=100)
     description: str = ""
     completed: bool = False
@@ -198,6 +199,27 @@ async def create_todo(todo: Todo):
 @app.get("/todos")
 async def get_todos():
     return todos_list
+
+
+@app.put("/todos/{todo_id}")
+async def update_todo(todo_id: int, updated_todo: Todo):
+    for todo in todos_list:
+        if todo["id"] == todo_id:
+            todo["title"] = updated_todo.title
+            todo["description"] = updated_todo.description
+            todo["completed"] = updated_todo.completed
+            return todo
+
+    return {"message": "Todo not found"}
+
+@app.delete("/todos/{todo_id}")
+async def delete_todo(todo_id: int):
+    for todo in todos_list:
+        if todo["id"] == todo_id:
+            todos_list.remove(todo)
+            return {"message": "Todo deleted successfully"}
+        
+    return {"message": "Todo not found"}
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host = "127.0.0.1",port = 8000, reload=True)
