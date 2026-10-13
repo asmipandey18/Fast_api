@@ -1,5 +1,5 @@
 # import the fastapi class
-from fastapi import FastAPI, Body, Path
+from fastapi import FastAPI, Body, Path, HTTPException
 import uvicorn
 from pydantic import BaseModel, Field
 from typing import List
@@ -186,13 +186,22 @@ async def home():
     return {"message": "Welcome to the TODO App"}
 
 class Todo(BaseModel):
-    id: int
+    id: int = Field(gt=0)
     title: str = Field(min_length=3, max_length=100)
     description: str = ""
     completed: bool = False
 
 @app.post("/todos")
 async def create_todo(todo: Todo):
+
+    ## validation
+    for existing_todo in todos_list:
+        if existing_todo["id"] == todo.id:
+            raise HTTPException(
+                status_code=400,
+                detail="Todo ID already exists"
+            )
+
     todos_list.append(todo.model_dump())
     return todo
 
@@ -210,7 +219,7 @@ async def update_todo(todo_id: int, updated_todo: Todo):
             todo["completed"] = updated_todo.completed
             return todo
 
-    return {"message": "Todo not found"}
+    raise HTTPException(status_code=404, detail="Todo not found")
 
 @app.delete("/todos/{todo_id}")
 async def delete_todo(todo_id: int):
@@ -219,7 +228,7 @@ async def delete_todo(todo_id: int):
             todos_list.remove(todo)
             return {"message": "Todo deleted successfully"}
         
-    return {"message": "Todo not found"}
+    raise HTTPException(status_code=404, detail="Todo not found")
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host = "127.0.0.1",port = 8000, reload=True)
