@@ -10,16 +10,16 @@ app = FastAPI()
 # define a simple GET endpoint
 # it means the roor (/) route for GET request
 
-## Task 1 
-@app.get("/")
-def read_root():
-    return{"message": "Hello Asmi pandey"}
+# ## Task 1 
+# @app.get("/")
+# def read_root():
+#     return{"message": "Hello Asmi pandey"}
 
-## Task 2
-## Develope a POST endpoint that accepts name and return a personalized greeting messages
-@app.post("/greet")
-def greet_user(name:str):
-    return{"message": f"Hello,{name}"}
+# ## Task 2
+# ## Develope a POST endpoint that accepts name and return a personalized greeting messages
+# @app.post("/greet")
+# def greet_user(name:str):
+#     return{"message": f"Hello,{name}"}
 
 # ## path parameters
 # @app.get("/hello/{name}")
@@ -63,29 +63,30 @@ def greet_user(name:str):
 # print(s1)
 # print(s1.model_dump())
 
-## Exception handling / error handling
 
-from pydantic import BaseModel, ValidationError
-from typing import List
 
-class Student(BaseModel):
-    id: int
-    name: str
-    subjects: List[str] = []
+# ## Exception handling / error handling
+# from pydantic import BaseModel, ValidationError
+# from typing import List
 
-data = {
-    'id': 1,
-    'name': "Asmi pandey",
-    'subjects': ['ML', 'Full Stack']
-}
+# class Student(BaseModel):
+#     id: int
+#     name: str
+#     subjects: List[str] = []
 
-try:
-    s1 = Student(**data)
-    print(s1)
+# data = {
+#     'id': 1,
+#     'name': "Asmi pandey",
+#     'subjects': ['ML', 'Full Stack']
+# }
 
-except ValidationError as e:
-    print("Invalid student data!")
-    print(e)
+# try:
+#     s1 = Student(**data)
+#     print(s1)
+
+# except ValidationError as e:
+#     print("Invalid student data!")
+#     print(e)
 
 
 ## Basic Data validation
@@ -131,15 +132,15 @@ except ValidationError as e:
 
 
 
-## pydantic model as request body
-class Student(BaseModel):
-    id: int
-    name: str = Field(None, title="Nmae of the student", max_length=10)
-    subjects: List[str] = []
+# ## pydantic model as request body
+# class Student(BaseModel):
+#     id: int
+#     name: str = Field(None, title="Nmae of the student", max_length=10)
+#     subjects: List[str] = []
 
-@app.post("/student")
-async def student_profile(s1: Student):
-    return s1
+# @app.post("/student")
+# async def student_profile(s1: Student):
+#     return s1
 
 
 
@@ -177,6 +178,26 @@ async def student_profile(s1: Student):
 #     return students
 
 
+## Todo App using FastAPI and Pydantic
+todos_list = []
+
+@app.get("/")
+async def home():
+    return {"message": "Welcome to the TODO App"}
+
+class Todo(BaseModel):
+    title: str = Field(min_length=3, max_length=100)
+    description: str = ""
+    completed: bool = False
+
+@app.post("/todos")
+async def create_todo(todo: Todo):
+    todos_list.append(todo.model_dump())
+    return todo
+
+@app.get("/todos")
+async def get_todos():
+    return todos_list
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host = "127.0.0.1",port = 8000, reload=True)
