@@ -42,4 +42,10 @@ step
         ```docker run -d --name mongodb -p 27017:27017 mongo:5.0.6```
 
 7. we need to connect the database to our codebase
-   - 
+   - we can configure mongodb with code via a driver.
+   - pymongo
+   - motor driver
+   - We defined asynchronous operation to create, read, update and delete student data in DB via motor. 
+
+8. CRUD Routes
+   - create a routes in routes folder, name it as student.py
