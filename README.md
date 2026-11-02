@@ -40,3 +40,6 @@ step
 
         Install mongodb using docker using following command
         ```docker run -d --name mongodb -p 27017:27017 mongo:5.0.6```
+
+7. we need to connect the database to our codebase
+   - 
