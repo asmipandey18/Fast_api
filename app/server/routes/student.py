@@ -7,3 +7,12 @@ from app.server.database import (
     retrieve_students,
     update_student
 )
+
+from app.server.models.student import (
+    ErrorResponseModel,
+    ResponseModel,
+    StudentSchema,
+    UpdateStudentModel
+)
+
+router = APIRouter()
