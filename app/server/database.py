@@ -1,3 +1,5 @@
+# We defined asynchronous operation to create, read, update and delete student data in DB via motor.
+
 import motor.motor_asyncio
 from bson.objectid import ObjectId
 
@@ -24,8 +26,9 @@ def student_helper(student) -> dict:
 # Retrieve all student present in the Database
 async def retrieve_students():
     students = []
+
     async for student in student_collection_elevatex.find():
-        students.append(student_collection_elevatex(student))
+        students.append(student_helper(student))
     return students
 
 # Add a new student into the database
@@ -58,7 +61,7 @@ async def update_student(id: str, data: dict):
 
 # Delete a student from the database
 async def delete_student(id: str):
-    student = await student_collection_elevatex.find_one({"_id": ObjectId}(id))
+    student = await student_collection_elevatex.find_one({"_id": ObjectId(id)})
     if student:
         await student_collection_elevatex.delete_one({"_id": ObjectId(id)})
         return  True
